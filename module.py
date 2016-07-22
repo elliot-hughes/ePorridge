@@ -50,6 +50,7 @@ def fetch_cardid_from_sn(db, sn):
 	try:
 		dbid = cur.fetchone()[0]		# If value in DB is "NULL", this returns None.
 	except Exception as ex:
+		print ex
 		return 0
 	else:
 		if dbid:
@@ -111,6 +112,8 @@ def print_test(db, n, test_dict):
 	if not test_dict["revoked"]:
 		good = (0, 1)[test_dict["passed"]]
 	
+	## So, good == -1 means that the test is revoked (whether or not it passed), good == 0 means it failed, and good == 1 means it passed.
+	
 	# Print information:
 	print '<h4>Attempt: {0}</h4>'.format(n)
 	print '<table class="table table-bordered table-striped Portage_table" style="width: 60%; background-color: {0};">'.format(background_colors[good])
@@ -122,18 +125,24 @@ def print_test(db, n, test_dict):
 	print '<td>{0}</td>'.format(test_dict["tester"])
 	print '<td>{0}</td>'.format(test_dict["time"])
 	if good == -1:
-		print '<td><b>Revoked</b>: {0}</td>'.format(test.fetch_revoke(db, test_dict["test_id"]))
+		print u'<td><b>Revoked</b>: {0}</td>'.format(test.fetch_revoke(db, test_dict["test_id"])).encode('utf-8')
 	else:
 		print '<td align=left>{0}</td>'.format(("no", "yes")[good])
-		print "<td align=right style='{{background-color: yellow;}}'><a href='revoke.py?db={0}&test_id={1}'>Revoke</a></td>".format(db, test_dict["test_id"])
+#		print "<td align=right style='{{background-color: yellow;}}'><a href='revoke.py?db={0}&test_id={1}'>Revoke</a></td>".format(db, test_dict["test_id"])
+		print "<td align=right style='{{background-color: yellow;}}'>"
+		print '<form method="post" class="sub-card-form" action="revoke.py?db={0}&test_id={1}">'.format(db, test_dict["test_id"])
+		print 'Revoke:<br>'
+		print '<input type="text" name="comment"><br><input type="submit" value="Submit">'
+		print '</form>'
+		print "</td>"
 	print '</tr><tr>'
 	print '<td><b>Comments:</b></td>' 
-	print '<td colspan=3>{0}</td>'.format(test_dict["comments"])
+	print u'<td colspan=3>{0}</td>'.format(test_dict["comments"]).encode('utf-8')
 	print '</tr>'
 	
 	## Print attachements:
 	for attachment in test_dict["attachments"]:
-		print '<tr><td>Attachment: <a href="get_attach.py?db={0}&attach_id={1}">{2}</a><td colspan=2><i>{3}</i></tr>'.format(db, attachment["id"], attachment["name"], attachment["description"])
+		print u'<tr><td>Attachment: <a href="get_attach.py?db={0}&attach_id={1}">{2}</a><td colspan=2><i>{3}</i></tr>'.format(db, attachment["id"], attachment["name"], attachment["description"]).encode('utf-8')
 	print '</tbody></table>'
 	### Display image if there is one:
 	for attachment in test_dict["attachments"]:
@@ -148,9 +157,9 @@ def print_tests(db, cardid):
 	for testtype_tuple, test_list in tests.items():
 		print '<div><br><div class="row">'
 		print '<div class="col-md-12">'
-		print '<h3 id="test-{testtype_id}"><a href="test_form.py?db={db}&card_id={cardid}&suggested={testtype_id}">{name}</a></h3><br>'.format(db=db, testtype_id=testtype_tuple[0], name=testtype_tuple[1], cardid=cardid)
+		print u'<h3 id="test-{testtype_id}"><a href="test_form.py?db={db}&card_id={cardid}&suggested={testtype_id}">{name}</a></h3><br>'.format(db=db, testtype_id=testtype_tuple[0], name=testtype_tuple[1], cardid=cardid).encode('utf-8')
 		for i, test_dict in enumerate(test_list):
-			print_test(db, i, test_dict)
+			print_test(db, i + 1, test_dict)
 		print '<hr></div></div>'
 
 
@@ -167,7 +176,7 @@ def print_notes(db, sn):
 	print "<h2 id='notes'>User notes</h2>"
 	for note in notes :
 		print "<b>{0}</b><br>".format(note[0])
-		print "<i>{0}</i><br><br><br>".format(note[1])
+		print u"<i>{0}</i><br><br><br>".format(note[1]).encode('utf-8')
 	print '</div><br><div><hr><br>'
 
 
@@ -175,8 +184,9 @@ def main():
 	# Arguments:
 	form = cgi.FieldStorage()
 	cardid = base.cleanCGInumber(form.getvalue('card_id'))
-	sn = base.cleanCGInumber(form.getvalue('serial_num'))
+#	sn = base.cleanCGInumber(form.getvalue('serial_num'))
 	db = settings.get_db()
+	sn = fetch_sn_from_cardid(db, cardid)
 	
 	# Basic:
 	base.begin()

@@ -17,11 +17,11 @@ def fetch_test_info(db):
 	cur = con.cursor()
 	
 	# Fetch from DB:
-	cur.execute("SELECT name, desc_long, required FROM Test_Type")
+	cur.execute("SELECT name, desc_long, required, relative_order FROM Test_Type")
 	rows = cur.fetchall()
 	
 	# Return:
-	return [{'name':test[0],'desc':test[1],'req':test[2]} for test in rows]
+	return sorted([{'name':test[0], 'desc':test[1], 'req':test[2], "order":test[3]} for test in rows], key=lambda k: k["order"])
 
 
 def main():
@@ -41,15 +41,15 @@ def main():
 	print                    '<th> Required? </th>'
 	print                '</tr>'
 	testInfo = fetch_test_info(db)
-	for test  in testInfo:
+	for test in testInfo:
 
 		print '<tr align=left>'
-		print '<td>',test['name'],'</td>'
-		print '<td>',test['desc'],'</td>'
+		print u'<td>{0}</td>'.format(test['name']).encode('utf-8')
+		print u'<td>{0}</td>'.format(test['desc']).encode('utf-8')
 		if test['req'] == 0 :
-			print '<td>false</td>'
+			print '<td>no</td>'
 		else:
-			print '<td>true</td>'
+			print '<td>yes</td>'
 		print '</tr>'
 
 	print            '</tbody>'

@@ -57,7 +57,7 @@ def print_modules_table(db):
 		for col in range(2):
 			print '<td><ul>'
 			for status in unfinished[col::2]:
-				print '<li> <a href="test_form.py?db={db}&serial_num={sn}&suggested={sug}">{name}</a>'.format(db=db, sn=sn, sug=status["testtype_id"], name=status["testtype_name"])
+				print u'<li> <a href="test_form.py?db={db}&card_id={cardid}&serial_num={sn}&suggested={sug}">{name}</a>'.format(db=db, cardid=cardid, sn=sn, sug=status["testtype_id"], name=status["testtype_name"]).encode('utf-8')
 			print '</ul></td>'
 		
 		## Passed testtypes:
@@ -65,7 +65,7 @@ def print_modules_table(db):
 		for col in range(2):
 			print '<td><ul>'
 			for status in passed[col::2]:
-				print '<li> <a href="module.py?db={db}&card_id={cardid}&serial_num={sn}#test-{testtype_id}">{name}</a>'.format(db=db, cardid=cardid, sn=sn, testtype_id=status["testtype_id"], name=status["testtype_name"])
+				print u'<li> <a href="module.py?db={db}&card_id={cardid}&serial_num={sn}#test-{testtype_id}">{name}</a>'.format(db=db, cardid=cardid, sn=sn, testtype_id=status["testtype_id"], name=status["testtype_name"]).encode('utf-8')
 			print '</ul></td>'
 		
 		## Failed testtypes:
@@ -73,7 +73,7 @@ def print_modules_table(db):
 		for col in range(2):
 			print '<td><ul>'
 			for status in failed[col::2]:
-				print '<li> <a href="module.py?db={db}&card_id={cardid}&serial_num={sn}#test-{testtype_id}">{name}</a>'.format(db=db, cardid=cardid, sn=sn, testtype_id=status["testtype_id"], name=status["testtype_name"])
+				print u'<li> <a href="module.py?db={db}&card_id={cardid}&serial_num={sn}#test-{testtype_id}">{name}</a>'.format(db=db, cardid=cardid, sn=sn, testtype_id=status["testtype_id"], name=status["testtype_name"]).encode('utf-8')
 			print '</ul></td>'
 		
 		print '</tr>'

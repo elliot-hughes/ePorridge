@@ -8,6 +8,7 @@
 import cgitb
 cgitb.enable()
 import cgi
+from collections import OrderedDict
 
 import base, settings
 from connect import connect
@@ -15,6 +16,35 @@ import module_functions
 # :IMPORTS
 
 # FUNCTIONS:
+def fetch_cardid_from_testid(db, test_id):
+	con = connect(False, db)
+	cur = con.cursor()
+	cur.execute("SELECT card_id FROM Test WHERE test_id={0}".format(test_id))
+	try:
+		card_id = cur.fetchone()[0]		# If value in DB is "NULL", this returns None.
+	except Exception as ex:
+		print ex
+		return 0
+	else:
+		if card_id:
+			return card_id
+		return 0
+
+def fetch_testtypeid_from_testid(db, test_id):
+	con = connect(False, db)
+	cur = con.cursor()
+	cur.execute("SELECT test_type_id FROM Test WHERE test_id={0}".format(test_id))
+	try:
+		testtype_id = cur.fetchone()[0]		# If value in DB is "NULL", this returns None.
+	except Exception as ex:
+		print ex
+		return 0
+	else:
+		if testtype_id:
+			return testtype_id
+		return 0
+
+
 def fetch_revoke(db, test_id):
 	# Get a list of tests for this card:
 	con = connect(False, db)
@@ -36,7 +66,7 @@ def fetch_tests(db, cardid, attachments=True, inclusive=True):
 	
 	# Fetch:
 	revoked_ids = fetch_revoked(db, cardid)
-	tests = {}
+	tests = OrderedDict()
 	for testtype_dict in fetch_types(db, inclusive=inclusive):
 		cur.execute("SELECT People.person_name, Test.day, Test.successful, Test.comments, Test_Type.name, Test.test_id FROM Test, Test_Type, People, Card WHERE Test_Type.test_type={0} AND Card.card_id={1} AND People.person_id=Test.person_id AND Test_Type.test_type=Test.test_type_id AND Test.card_id = Card.card_id ORDER BY Test.day ASC".format(testtype_dict["testtype_id"], cardid))
 		test_dicts = [{
@@ -119,10 +149,10 @@ def fetch_types(db, inclusive=True):
 	# Get a list of all testtypes:
 	con = connect(False, db)
 	cur = con.cursor()
-	cur.execute("SELECT test_type, name, required FROM Test_Type")
+	cur.execute("SELECT test_type, name, required, relative_order FROM Test_Type")
 	if not inclusive:
-		return [{"testtype_id": item[0], "testtype_name": item[1], "required": item[2]} for item in cur.fetchall() if item[2]]
-	return [{"testtype_id": item[0], "testtype_name": item[1], "required": item[2]} for item in cur.fetchall()]
+		return sorted([{"testtype_id": item[0], "testtype_name": item[1], "required": item[2], "order": item[3]} for item in cur.fetchall() if item[2]], key=lambda k: k["order"])
+	return sorted([{"testtype_id": item[0], "testtype_name": item[1], "required": item[2], "order": item[3]} for item in cur.fetchall()], key=lambda k: k["order"])
 
 
 def fetch_type_statuses(db, cardid, include_revoked=False):
