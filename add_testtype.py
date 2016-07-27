@@ -21,7 +21,8 @@ def main():
 	
 	# Begin:
 	base.begin()
-	base.header(title='{0}: add testtype'.format(db))
+	#base.header(title='{0}: add testtype'.format(db))
+	base.header_redirect("erudition.py?db={0}".format(db))
 	base.top(db)
 	
 	# Insert:
@@ -38,3 +39,5 @@ def main():
 if __name__ == "__main__":
 	main()
 # :MAIN
+
+

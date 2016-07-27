@@ -21,6 +21,7 @@ def main():
 	# Print basic HTML stuff:
 	base.begin()
 	base.header(title='Adding a unique ID...')
+	base.header_redirect("module.py?db={0}&card_id={1}&serial_num={2}".format(db,card_id,sn))
 	base.top(db)
 	
 	# Add:

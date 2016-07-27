@@ -69,9 +69,9 @@ def main():
 
 	# Basic:
 	base.begin()
-##	base.header(title='{0}: add test'.format(db))
-#	base.header_redirect("module.py?db={0}&card_id={1}&serial_num={2}".format(db,card_id,sn))
-##	base.header_redirect_module_test(card_id, serial_num, test_type)
+	#base.header(title='{0}: add test'.format(db))
+	base.header_redirect("module.py?db={0}&card_id={1}&serial_num={2}".format(db,card_id,sn))
+	#base.header_redirect_module_test(card_id, serial_num, test_type)
 	base.top(db)
 	
 	# Add the test:

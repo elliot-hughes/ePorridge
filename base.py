@@ -51,7 +51,7 @@ def top(db, title="HCAL Phase I Upgrade", subtitle="HF Frontend Quality Assuranc
 					<a href="home.py?db={2}"><button class="home">Home</button></a>
 					<a href="summary.py?db={2}"><button>Summary</button></a>
 					<a href="testers.py?db={2}"><button>Testers</button></a>
-					<a href="testtypes.py?db={2}"><button>Setup</button></a>
+					<a href="erudition.py?db={2}"><button>Setup</button></a>
 					<a href="index.html"><button>Pick a different database</button></a>
 				</div>
 				<br><br><br>
