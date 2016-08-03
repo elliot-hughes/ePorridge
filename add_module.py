@@ -29,7 +29,7 @@ def main():
 		base.header(title='{0}: add module'.format(db))
 		base.top(db)
 		print ex
-		print '<h3>Serial number "{0}" already exists! It was not added.</h3>'.format(sn)
+		print '<center><h3 style="color:red"><i>Serial number "{0}" already exists! It was not added.</i></h3></center>'.format(sn)
 
 	else:
 		cardid = module.fetch_cardid_from_sn(db,sn)

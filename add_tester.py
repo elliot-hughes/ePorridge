@@ -18,8 +18,7 @@ def main():
 	
 	# Begin:
 	base.begin()
-	base.header(title='{0}: add tester'.format(db))
-        base.header_redirect("testers.py?db={0}".format(db))
+        base.header_redirect("testers.py?db={0}".format(db),1)
         base.top(db)
 	
 	# Connect to DB:
@@ -32,7 +31,7 @@ def main():
 		con.commit()
 		con.close()
 	else:
-		print "ERROR: null tester name submitted. Database not updated."
+		print "<center><h3 style='color:red'><i>ERROR: Null tester name submitted. Database not updated.</i></h3></center>"
 	
 	base.bottom()
 # :FUNCTIONS

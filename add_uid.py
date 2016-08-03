@@ -4,7 +4,7 @@
 import cgi, cgitb
 cgitb.enable()
 
-import base, settings
+import base, settings, module
 from connect import connect
 # :IMPORTS
 
@@ -15,13 +15,12 @@ def main():
 	if form.getvalue('unique_id'):
 		uid = cgi.escape(form.getvalue('unique_id'))
 		card_id = cgi.escape(form.getvalue('card_id'))
-		sn = cgi.escape(form.getvalue('serial_num'))
 	db = settings.get_db()
 	
 	# Print basic HTML stuff:
 	base.begin()
 	base.header(title='Adding a unique ID...')
-	base.header_redirect("module.py?db={0}&card_id={1}&serial_num={2}".format(db,card_id,sn))
+	base.header_redirect("module.py?db={0}&card_id={1}".format(db, card_id))
 	base.top(db)
 	
 	# Add:

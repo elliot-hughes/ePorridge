@@ -37,13 +37,13 @@ def main():
 	# Arguments:
 	form = cgi.FieldStorage()
 	note = cgi.escape(form.getvalue('note'))
-	sn = cgi.escape(form.getvalue('serial_num'))
+	sn = cgi.escape(form.getvalue('serial_num'))		# This is coming from a form.
 	cardid = cgi.escape(form.getvalue('card_id'))
 	db = settings.get_db()
 	
 	# Begin:
 	base.begin()
-	base.header_redirect("module.py?db={0}&card_id={1}&serial_num={2}#notes".format(db, cardid, sn))
+	base.header_redirect("module.py?db={0}&card_id={1}#notes".format(db, cardid))
 	base.top(db)
 	
 	# Add note:

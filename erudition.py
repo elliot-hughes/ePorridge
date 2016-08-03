@@ -89,7 +89,7 @@ def print_card_info_table(db):
 		print '<center><p><i>No module information.</i></p></center>'
 
 def print_testtype_form(db):
-	print '<form action="add_testtype.py?db={0}" method="post" enctype="multipart/form-data">'.format(db)
+	print '<div class="row"><form action="add_testtype.py?db={0}" method="post" enctype="multipart/form-data">'.format(db)
 	print '\t<div class="col-md-6">'
 	print '\t\t<b>Add test type:</b><br>'
 	print '\t\tName:<br>'
@@ -101,12 +101,12 @@ def print_testtype_form(db):
 	print '\t\t<input type="checkbox" name="required" checked="checked">Required<br><br>'
 	print '\t\t<input type="submit" value="Submit"><br><br>'
 	print '\t</div>'
-	print '</form>'
+	print '</form></div>'
 
 def print_cardinfotype_form(db):
-	print '<form action="add_cardInfoType.py?db={0}" method="post" enctype="multipart/form-data">'.format(db)
+	print '<div class="row"><form action="add_cardInfoType.py?db={0}" method="post" enctype="multipart/form-data">'.format(db)
 	print '\t<div class="col-md-6">'
-	print '\t\t<b>Add card info type:</b><br>'
+	print '\t\t<b>Add characteristic type:</b><br>'
 	print '\t\tName:<br>'
 	print '\t\t<input type="text" name="characteristic"><br><br>'
 	print '\t\tDescribe the characteristic in brief:<br>'
@@ -115,7 +115,7 @@ def print_cardinfotype_form(db):
 	print '\t\t<textarea name="descLong" rows="5" cols="100"></textarea><br><br>'
 	print '\t\t<input type="submit" value="Submit"><br><br>'
 	print '\t</div>'
-	print '</form>'
+	print '</form></div>'
 
 def main():
 	db = settings.get_db()

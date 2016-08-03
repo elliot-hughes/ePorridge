@@ -21,16 +21,19 @@ def main():
 	
 	# Begin:
 	base.begin()
-	#base.header(title='{0}: add testtype'.format(db))
-	base.header_redirect("erudition.py?db={0}".format(db))
+	base.header_redirect("erudition.py?db={0}".format(db),1)
 	base.top(db)
 	
 	# Insert:
 	con = connect(True, db)
 	cur = con.cursor()
-	cur.execute("INSERT INTO Test_Type (name, required, desc_short, desc_long, relative_order) VALUES ('{0}', {1}, '{2}', '{3}', 1);".format(testtype_name, int(testtype_req), testtype_short, testtype_long))
-	con.commit()
-	con.close()
+	if testtype_name and testtype_long:
+		cur.execute("INSERT INTO Test_Type (name, required, desc_short, desc_long, relative_order) VALUES ('{0}', {1}, '{2}', '{3}', 1);".format(testtype_name, int(testtype_req), testtype_short, testtype_long))
+		con.commit()
+		con.close()
+
+	else:
+		print '<center><h3 style="color:red"><i> ERROR: Null test type or test type description provided. Please input again.</i></h3></center>'
 
 	base.bottom()
 # :FUNCTIONS

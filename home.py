@@ -33,7 +33,7 @@ def print_list_module(db, n_columns=3):
 		card_dbid = card[1]
 		card_uid = module.fetch_uniqueID(db, card_sn)
 		
-		cols[i%n_columns] += '<li style="font-size:18px"><a href="module.py?db={db}&card_id={dbid}"> {sn} ({uid})</h4></li>'.format(db=db, sn=card_sn, dbid=card_dbid, uid=card_uid)
+		cols[i%n_columns] += '<li style="font-size:18px"><a href="module.py?db={db}&card_id={dbid}"> {sn} ({uid})</a></h4></li>'.format(db=db, sn=card_sn, dbid=card_dbid, uid=card_uid)
 	
 	# Print columns:
 	print '<div class="row">'
@@ -56,7 +56,7 @@ def print_module_form(db):
 def print_home(db):
 	print '\t\t<div class="row">'
 	print '\t\t\t<div class="col-md-3">'
-	print '\t\t\t\t<h2>All Boards:</h2>'
+	print '\t\t\t\t<h2>All Modules:</h2>'
 	print '\t\t\t\t<strong><em>(Sorted by serial number)</em></strong>'
 	print '\t\t\t</div>'
 	print '\t\t\t<div class="col-md-6">'

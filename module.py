@@ -71,14 +71,14 @@ def fetch_uniqueID(db, sn):
 			return uid
 		return 0
 
-def print_uid_form(db, cardid, sn):
+def print_uid_form(db, cardid):
 	print '<form method="post" action="add_uid.py?db={db}">'.format(db=db)
 	print 'Unique ID: <input type="text" name="unique_id">&nbsp;<input type="submit" value="Add">'
 	print '<input type="hidden" name="card_id" value="{0}">'.format(cardid)
-	print '<input type="hidden" name="serial_num" value="{0}">'.format(sn)
 	print '</form>'
 
-def print_test_form(db, sn, cardid):
+def print_test_form(db, cardid):
+	sn = fetch_sn_from_cardid(db, cardid)
 	uid = fetch_uniqueID(db, sn)
 	print '<div class="row">'
 	print '<div class="col-md-8">'
@@ -86,14 +86,17 @@ def print_test_form(db, sn, cardid):
 	print '</div>'
 	print '<div class="col-md-4">'
 	print '<br><br>'
-	print '<a href="test_form.py?db={db}&card_id={dbid}&serial_num={sn}">'.format(db=db, sn=sn, dbid=cardid, uid=uid)
+	print '<a href="characteristic_form.py?db={db}&card_id={dbid}">'.format(db=db, dbid=cardid, uid=uid)
+	print '<button>Add a new characteristic</button>'
+	print '</a><br>'
+	print '<a href="test_form.py?db={db}&card_id={dbid}">'.format(db=db, dbid=cardid, uid=uid)
 	print '<button>Add a new test</button>'
-	print '</a><br><br>'
-	print '<a href="note_form.py?db={db}&card_id={dbid}&serial_num={sn}">'.format(db=db, sn=sn, dbid=cardid, uid=uid)
-	print '<button>Add a note</button>'
+	print '</a><br>'
+	print '<a href="note_form.py?db={db}&card_id={dbid}">'.format(db=db, dbid=cardid, uid=uid)
+	print '<button>Add a new note</button>'
 	print '</a><br><br>'
 	if not uid:
-		print_uid_form(db, cardid, sn)
+		print_uid_form(db, cardid)
 	print '</a>'
 	print '</div>'
 	print '</div>'
@@ -153,6 +156,7 @@ def print_test(db, n, test_dict):
 
 
 def print_tests(db, cardid):
+	print "<h2 id='tests'>Test information</h2>"
 	tests = test.fetch_tests(db, cardid, inclusive=True)
 	for testtype_tuple, test_list in tests.items():
 		print '<div><br><div class="row">'
@@ -161,9 +165,34 @@ def print_tests(db, cardid):
 		for i, test_dict in enumerate(test_list):
 			print_test(db, i + 1, test_dict)
 		print '<hr></div></div>'
+	
 
+def print_characteristics(db, cardid):
 
-def print_notes(db, sn):
+	sn = fetch_sn_from_cardid(db, cardid)
+	con = connect(False, db)
+	cur = con.cursor()
+
+	print '<div class="row">'
+	print '<div class="col-md-12">'
+	print "<h2>Module information</h2>"
+	cur.execute("SELECT Card_Info.card_id, Card_Info.info_type, Card_Info.info, Card_Info_Types.info_type_id, Card_Info_Types.Info_Name FROM Card_Info, Card, Card_Info_Types WHERE Card_Info.card_id={0} AND Card_Info_Types.info_type_id = Card_Info.info_type AND Card.sn={1}".format(cardid,sn));
+	characteristic_list = []
+	characteristic_list = cur.fetchall()
+	if len(characteristic_list) != 0:
+		print '<table class="table" style="width:100%; font-size: 12px">'
+  		print '<tr><th><h3>Characteristic</h3></th><th><h3>Value</h3></th></tr>'
+	
+		for item in characteristic_list:
+			print '<tr><th>{char_name}</th>'.format(char_name=item[4])
+			print '<th>{char_value}</th>'.format(char_value=item[2])
+	
+		print '</table>'
+	else:
+		print '<center><h4><i> There is no module information </i></h4></center>'
+
+def print_notes(db, cardid):
+	sn = fetch_sn_from_cardid(db, cardid)
 	# Fetch list of notes:
 	con = connect(False, db)
 	cur = con.cursor()
@@ -194,9 +223,10 @@ def main():
 	base.top(db)
 	
 	# Add test form:
-	print_test_form(db, sn, cardid)
+	print_test_form(db, cardid)
+	print_characteristics(db, cardid)
 	print_tests(db, cardid)
-	print_notes(db, sn)
+	print_notes(db, cardid)
 	
 #	module_functions.export_to_xml(serial_num, card_id)
 	

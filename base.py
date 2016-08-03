@@ -60,9 +60,10 @@ def top(db, title="HCAL Phase I Upgrade", subtitle="HF Frontend Quality Assuranc
 #<a href="fwVersion.py"><button>F/W versions</button></a>
 
 def bottom():
-	print '''\t</div>
-</body>
-</html>'''
+	print "\t</div>"
+	print '\t<br><div id="footer-container"><span class="footer">Powered by <a href="https://github.com/elliot-hughes/ePorridge">ePorridge</a>.</span></div><br>'
+	print "</body>"
+	print "</html>"
 
 
 def cleanCGInumber(cgitext):

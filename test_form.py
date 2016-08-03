@@ -11,6 +11,21 @@ import module
 # :IMPORTS
 
 # FUNCTIONS:
+def fetch_test_info(db):
+	con = connect(False, db)
+	cur = con.cursor()
+	cur.execute("SELECT name, desc_long, relative_order FROM Test_Type")
+	rows = cur.fetchall()
+	return sorted([{'name':test[0], 'desc':test[1], 'order':test[2]} for test in rows], key=lambda k: k["order"])
+
+def print_long_desc(db, suggested_test):
+	test_info = fetch_test_info(db)
+	if not suggested_test:
+		suggested_test = 0
+
+	print str(suggested_test)+": "
+	print test_info[1]
+
 def print_test_form(db, dbid, sn, suggested_test):
 	# Arguments:
 	if not suggested_test:
@@ -23,7 +38,6 @@ def print_test_form(db, dbid, sn, suggested_test):
 	
 	# Print form:
 	print		'<form action="add_test.py?db={0}" method="post" enctype="multipart/form-data">'.format(db)
-	print 			'<INPUT TYPE="hidden" name="serial_number" value="{0}">'.format(sn)
 	print 			'<INPUT TYPE="hidden" name="card_id" value="{0}">'.format(dbid)
 	print			'<div class="row">'
 	print				'<div class="col-md-12">'
@@ -49,7 +63,7 @@ def print_test_form(db, dbid, sn, suggested_test):
 	print					'<select name="test_type">'
 	for test_type, test_name in rows:
 		if test_type == suggested_test:
-			print						'<option value="{0}" selected>{1}</option>'.format(test_type, test_name)
+			print						u'<option value="{0}" selected>{1}</option>'.format(test_type, test_name).encode('utf-8')
 		else:
 			print						u'<option value="{0}">{1}</option>'.format(test_type, test_name).encode('utf-8')
 	print					'</select>'
@@ -120,6 +134,7 @@ def main():
 	base.top(db)
 	
 	# Test form:
+	print_long_desc(db, suggested_test)
 	print_test_form(db, cardid, sn, suggested_test)
 	
 	base.bottom()

@@ -94,6 +94,7 @@ def fetch_tests(db, cardid, attachments=True, inclusive=True):
 	return tests
 
 
+
 def fetch_test_statuses(db, cardid, inclusive=False):
 	# Get a list of test status dictionaries for this card:
 	con = connect(False, db)
@@ -153,7 +154,6 @@ def fetch_types(db, inclusive=True):
 	if not inclusive:
 		return sorted([{"testtype_id": item[0], "testtype_name": item[1], "required": item[2], "order": item[3]} for item in cur.fetchall() if item[2]], key=lambda k: k["order"])
 	return sorted([{"testtype_id": item[0], "testtype_name": item[1], "required": item[2], "order": item[3]} for item in cur.fetchall()], key=lambda k: k["order"])
-
 
 def fetch_type_statuses(db, cardid, include_revoked=False):
 	# Get a list of {testtype_id, testtype_name, required_value, passed_value} (for each test type):

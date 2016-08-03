@@ -6,7 +6,7 @@ cgitb.enable()
 import cgi
 import os
 
-import base, settings
+import base, settings, module
 from connect import connect
 import module
 # :IMPORTS
@@ -24,9 +24,11 @@ def add_test_basic(db, person_id, test_type, card_id, success, comments):
 	cmd_sql = "INSERT INTO Test (person_id, test_type_id, card_id, successful, comments, day) VALUES (%s, %s, %s, %s, %s, NOW())"
 	## This is safer because Python takes care of escaping any illegal/invalid text
 	items = (person_id, test_type, card_id, int(success), comments)
+	#if comments:
 	cur.execute(cmd_sql, items)
 	test_id = cur.lastrowid
 	con.commit()
+#	else:	test_id = 0
 	
 	return test_id
 
@@ -57,7 +59,6 @@ def main():
 	person_id = base.cleanCGInumber(form.getvalue("person_id"))
 	test_type = base.cleanCGInumber(form.getvalue("test_type"))
 	card_id = base.cleanCGInumber(form.getvalue("card_id"))
-	sn = base.cleanCGInumber(form.getvalue("serial_number"))
 	success = (False, True)[bool(form.getvalue("success"))]
 	
 	## Comments:
@@ -66,11 +67,12 @@ def main():
 		comments = cgi.escape(comments)
 	
 	db = settings.get_db()
+	sn = module.fetch_sn_from_cardid(db, card_id)
 
 	# Basic:
 	base.begin()
 	#base.header(title='{0}: add test'.format(db))
-	base.header_redirect("module.py?db={0}&card_id={1}&serial_num={2}".format(db,card_id,sn))
+	base.header_redirect("module.py?db={0}&card_id={1}".format(db, card_id))
 	#base.header_redirect_module_test(card_id, serial_num, test_type)
 	base.top(db)
 	

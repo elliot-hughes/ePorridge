@@ -5,11 +5,12 @@ import cgi
 import cgitb
 cgitb.enable()
 
-import base, settings
+import base, settings, module
 # :IMPORTS
 
 # FUNCTIONS:
-def print_form(db, sn, cardid):
+def print_form(db, cardid):
+	sn = module.fetch_sn_from_cardid(db, cardid)
 	print '<form method="post" class="sub-id-form" action="add_note.py?db={0}">'.format(db)
 	print '<div class="row">'
 	print '<div class="col-md-12">'
@@ -34,7 +35,6 @@ def print_form(db, sn, cardid):
 def main():
 	# Arguments:
 	form = cgi.FieldStorage()
-	sn = base.cleanCGInumber(form.getvalue('serial_num'))
 	cardid = base.cleanCGInumber(form.getvalue('card_id'))
 	db = settings.get_db()
 	
@@ -44,7 +44,7 @@ def main():
 	base.top(db)
 	
 	# Form:
-	print_form(db, sn, cardid)
+	print_form(db, cardid)
 	
 	base.bottom()
 # :FUNCTIONS
