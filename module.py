@@ -5,7 +5,7 @@ import cgitb
 cgitb.enable()
 import cgi
 
-import base, settings
+import base, settings, testers
 import test
 from connect import connect
 import module_functions
@@ -210,7 +210,7 @@ def print_notes(db, cardid):
 	# Fetch list of notes:
 	con = connect(False, db)
 	cur = con.cursor()
-	cur.execute("SELECT date_time, note FROM Card_Notes WHERE sn={0}".format(sn));
+	cur.execute("SELECT date_time, note, person_id FROM Card_Notes WHERE sn={0}".format(sn));
 	notes = cur.fetchall()
 	
 	# Print notes:
@@ -218,8 +218,12 @@ def print_notes(db, cardid):
 	print '<div class="col-md-12">'
 	print "<h2 id='notes'>User notes</h2><br>"
 	if notes:
-		for note in notes :
-			print "{0}</b><br>".format(note[0])
+		for note in notes:
+			person_id = note[2]
+			person = "Unknown"
+			if person_id:
+				person = testers.fetch_name_from_id(db, person_id)
+			print "{0} by <b>{1}</b></b><br>".format(note[0], person)
 			print u"<i>{0}</i><br><br><br><br>".format(note[1]).encode('utf-8')
 	else:
 		print "<i>(There are no notes for this module.)</i>"

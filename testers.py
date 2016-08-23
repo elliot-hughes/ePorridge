@@ -12,6 +12,16 @@ import module_functions
 # :IMPORTS
 
 # FUNCTIONS:
+def fetch_name_from_id(db, person_id):
+	# Connect to DB:
+	con = connect(False, db)
+	cur = con.cursor()
+	
+	# Fetch from DB:
+	cur.execute("SELECT person_name FROM People WHERE person_id={0}".format(person_id))
+	return cur.fetchone()[0]
+
+
 def fetch_user_info(db):
 	# Connect to DB:
 	con = connect(False, db)
@@ -44,7 +54,7 @@ def main():
 	for user in userInfo:
 
 		print '<tr>'
-		print '<td align="left">',user['name'],'</td>'
+		print u'<td align="left">{0}</td>'.format(user['name']).encode("utf-8")
 		print '<td align="left">',user['id'],'</td>'
 		print '</tr>'
 

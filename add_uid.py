@@ -27,7 +27,7 @@ def main():
 	try:
 		con = connect(True, db)
 		cur = con.cursor()
-		cur.execute("UPDATE Card SET unique_id={0} WHERE card_id={1}".format(uid, card_id))
+		cur.execute('UPDATE Card SET unique_id="{0}" WHERE card_id={1}'.format(uid, card_id))
 		con.commit()
 		con.close()
 	except Exception as err:

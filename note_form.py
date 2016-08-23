@@ -5,7 +5,7 @@ import cgi
 import cgitb
 cgitb.enable()
 
-import base, settings, module
+import base, settings, module, testers
 # :IMPORTS
 
 # FUNCTIONS:
@@ -14,10 +14,19 @@ def print_form(db, cardid):
 	print '<form method="post" class="sub-id-form" action="add_note.py?db={0}">'.format(db)
 	print '<div class="row">'
 	print '<div class="col-md-12">'
-	print '<h4>Add a note for the board with SN = {0}</h4>'.format(sn)
+	print '<h4>Add a note for the board a serial number of \"{0}\"</h4>'.format(sn)
 	print '</div>'
 	print '</div>'
 	print '<br><br>'
+	
+	print '<div class="row">'
+	print '<div class="col-md-6">'
+	print '<label>Tester:&nbsp;&nbsp;<select name="person_id"><option value="0">Select tester</option>'
+	people = testers.fetch_user_info(db)
+	for person in people:
+		print u'<option value="{0}">{1}</option>'.format(person["id"], person["name"]).encode("utf-8")
+	print '</select></label></div></div>'
+	
 	print '<div class="row">'
 	print '<div class = "col-md-6">'
 	print '<label class="sub-id">'
