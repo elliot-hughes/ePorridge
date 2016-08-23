@@ -30,11 +30,14 @@ def print_list_module(db, n_columns=3):
 	cols = ['']*n_columns
 	for i, card in enumerate(row):
 	#	card_sn = card[0]
-		card_dbid = card[0]
-		card_sn   = card[1]
-		card_uid = module.fetch_uniqueID_from_card_id(db, card_dbid)
+		card_id = card[0]
+		card_sn = card[1]
+		card_uid = module.fetch_uniqueID_from_card_id(db, card_id)
+		link_text = str(card_sn)
+		if card_uid:
+			link_text += " ({0})".format(card_uid)
 		
-		cols[i%n_columns] += '<li style="font-size:18px"><a href="module.py?db={db}&card_id={dbid}"> {sn} ({uid})</a></h4></li>'.format(db=db, sn=card_sn, dbid=card_dbid, uid=card_uid)
+		cols[i%n_columns] += '<li style="font-size:18px"><a href="module.py?db={0}&card_id={1}">{2}</a></h4></li>'.format(db, card_id, link_text)
 	
 	# Print columns:
 	print '<div class="row">'
