@@ -17,7 +17,7 @@ def get_db():
 	return db
 
 def get_attachment_path_base(db):
-	return archive_path + "/" + db
+	return archive_path + "/" + str(get_db())
 
 def get_attachment_path(db, test_id, attach_id):
 	return "{0}/{1}/{2}".format(get_attachment_path_base(db), test_id, attach_id)

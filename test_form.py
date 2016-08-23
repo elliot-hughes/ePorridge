@@ -11,21 +11,20 @@ import module
 # :IMPORTS
 
 # FUNCTIONS:
-def fetch_test_info(db):
+def print_long_desc(db, suggested_test):
 	con = connect(False, db)
 	cur = con.cursor()
-	cur.execute("SELECT name, desc_long, relative_order FROM Test_Type")
+	cur.execute("SELECT test_type, name, desc_long FROM Test_Type")
 	rows = cur.fetchall()
-	return sorted([{'name':test[0], 'desc':test[1], 'order':test[2]} for test in rows], key=lambda k: k["order"])
-
-def print_long_desc(db, suggested_test):
-	test_info = fetch_test_info(db)
 	if not suggested_test:
 		suggested_test = 0
-
-	print str(suggested_test)+": "
-	print test_info[1]
-
+	
+	for test_type in rows:
+		if test_type[0] == suggested_test:
+			#print test_type[1].encode('utf-8')+': '
+			#print test_type[2].encode('utf-8')
+			print '<h3 style="text-align:justify"><b>'+test_type[1].encode('utf-8')+'</b>: '+test_type[2].encode('utf-8')+'</h3>'
+ 
 def print_test_form(db, dbid, sn, suggested_test):
 	# Arguments:
 	if not suggested_test:
@@ -51,6 +50,7 @@ def print_test_form(db, dbid, sn, suggested_test):
 	print				'<div class="col-md-6">'
 	print					'<label>Tester'
 	print					'<select name="person_id">'
+	print						"<option value='0'>Select tester</option>"
 	for person_id, name in rows:
 		print						"<option value='{0}'>{1}</option>".format(person_id, name)
 	print					'</select>'
@@ -70,6 +70,7 @@ def print_test_form(db, dbid, sn, suggested_test):
 	print					'</label>'
 	print				'</div>'
 	print			'</div>'
+	print_long_desc(db, suggested_test)
 	print			'<br><br>'
 	print			'<div class="row">'
 	print				'<div class="col-md-3">'
@@ -134,7 +135,6 @@ def main():
 	base.top(db)
 	
 	# Test form:
-	print_long_desc(db, suggested_test)
 	print_test_form(db, cardid, sn, suggested_test)
 	
 	base.bottom()

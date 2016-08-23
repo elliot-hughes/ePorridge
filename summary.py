@@ -111,14 +111,15 @@ def print_tests_table(db):
 					totals[ind] += 1
 					if test2["passed"] == 1: passed[ind] += 1
 					elif test2["passed"] == 0: failed[ind] += 1
-					elif test2["passed"] == -1: remain[ind] += 1				
+					elif test2["passed"] == -1: remain[ind] += 1
+						
 			if check == 1:
 				names.append(test2["testtype_name"])
 				totals.append(1)
 				if test2["passed"] == 1: passed.append(1), failed.append(0), remain.append(0)
 				elif test2["passed"] == 0: passed.append(0), failed.append(1), remain.append(0)
 				elif test2["passed"] == -1: passed.append(0), failed.append(0), remain.append(1)
-
+	
 	passedper = []
 	failedper = []
 	remainper = []
@@ -128,7 +129,7 @@ def print_tests_table(db):
 		remainper.append(round(remain[i]/float(totals[i])*100))
 
 	for k in range(len(names)):
-		print "<tr><td>"+str(names[k].encode('utf-8'))+"</td><td style='text-align:right'>"+str(remain[k])+" ("+str(remainper[k])+"%)"+"</td><td style='text-align:right'>"+str(passed[k])+" ("+str(passedper[k])+"%)"+"</td><td style='text-align:right'>"+str(failed[k])+" ("+str(failedper[k])+"%)"+"</td></tr>"
+		print u"<tr><td>{0}".format(names[k]).encode("utf-8")+"</td><td style='text-align:right'>"+str(remain[k])+" ("+str(remainper[k])+"%)"+"</td><td style='text-align:right'>"+str(passed[k])+" ("+str(passedper[k])+"%)"+"</td><td style='text-align:right'>"+str(failed[k])+" ("+str(failedper[k])+"%)"+"</td></tr>"
 
         print '</tbody></table></div></div><br><br>'
 

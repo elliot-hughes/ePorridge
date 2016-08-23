@@ -61,7 +61,7 @@ def top(db, title="HCAL Phase I Upgrade", subtitle="HF Frontend Quality Assuranc
 
 def bottom():
 	print "\t</div>"
-	print '\t<br><div id="footer-container"><span class="footer">Powered by <a href="https://github.com/elliot-hughes/ePorridge">ePorridge</a>.</span></div><br>'
+	print '\t<br><br><div id="footer-container"><center><span class="footer">Powered by <a href="https://github.com/elliot-hughes/ePorridge">ePorridge</a>.</span><br><a href="https://github.com/elliot-hughes/ePorridge"><img src="resources/logo.png" width="100px"></a></center></div><br>'
 	print "</body>"
 	print "</html>"
 
@@ -71,3 +71,14 @@ def cleanCGInumber(cgitext):
 		return 0
 	return int(re.sub('[^0-9]', '', cgitext))
 
+
+
+def error(db, msg, redirect="", redirect_time=1):
+	begin()
+	top(db)
+	if redirect:
+		header_redirect(redirect, redirect_time)
+	else:
+		header()
+	print '<center><h3 style="color:red"><i>{0}</i></h3><br><h4 style="font-weight:bold"><a href="javascript:history.back()" style="text-decoration:none; color:red;">&larr; Go back</a></h4></center>'.format(msg)
+	bottom()

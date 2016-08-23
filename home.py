@@ -17,7 +17,7 @@ def fetch_list_module(db):
 	cur = con.cursor()
 	
 	# Fectch from DB:
-	cur.execute("SELECT sn, Card_id FROM Card ORDER by Card.sn ASC")
+	cur.execute("SELECT card_id, sn FROM Card ORDER by sn ASC")
 	rows = cur.fetchall()
 	return rows
 
@@ -29,9 +29,10 @@ def print_list_module(db, n_columns=3):
 	# Format columns:
 	cols = ['']*n_columns
 	for i, card in enumerate(row):
-		card_sn = card[0]
-		card_dbid = card[1]
-		card_uid = module.fetch_uniqueID(db, card_sn)
+	#	card_sn = card[0]
+		card_dbid = card[0]
+		card_sn   = card[1]
+		card_uid = module.fetch_uniqueID_from_card_id(db, card_dbid)
 		
 		cols[i%n_columns] += '<li style="font-size:18px"><a href="module.py?db={db}&card_id={dbid}"> {sn} ({uid})</a></h4></li>'.format(db=db, sn=card_sn, dbid=card_dbid, uid=card_uid)
 	
@@ -49,19 +50,28 @@ def print_list_module(db, n_columns=3):
 def print_module_form(db):
 	print	'<form method="post" class="sub-card-form" action="add_module.py?db={db}">'.format(db=db)
 	print		'<b>Add new module:</b><br>'
-	print		'Serial number: <input type="int" name="serial_number">&nbsp;<input type="submit" value="Submit">'
+	print		'Serial Number: <input type="int" name="serial_number">&nbsp;<input type="submit" value="Submit">'
+	print	'</form>'
+
+def print_query_form(db):
+	print	'<form method="post" class="sub-card-form" action="query.py?db={db}">'.format(db=db)
+	print		'<b>Find module:</b><br>'
+	print		'Serial Number: <input type="int" name="serial_number">&nbsp;<input type="submit" value="Submit">'
 	print	'</form>'
 
 
 def print_home(db):
 	print '\t\t<div class="row">'
-	print '\t\t\t<div class="col-md-3">'
-	print '\t\t\t\t<h2>All Modules:</h2>'
-	print '\t\t\t\t<strong><em>(Sorted by serial number)</em></strong>'
-	print '\t\t\t</div>'
 	print '\t\t\t<div class="col-md-6">'
 #	print '\t\t\t\t<a href="add_module.py?db={db}"><button type="button">Add a new board</button></a>'.format(db=db)
 	print_module_form(db)
+	print '\t\t\t</div>'
+	print '\t\t\t<div class="col-md-6">'
+	print_query_form(db)
+	print '\t\t\t</div>'
+	print '\t\t\t<div class="col-md-3">'
+	print '\t\t\t\t<h2>All Modules:</h2>'
+	print '\t\t\t\t<strong><em>(Sorted by card ID number)</em></strong>'
 	print '\t\t\t</div>'
 	print '\t\t</div>'
 	print '\t\t<br>'

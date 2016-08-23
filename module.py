@@ -50,13 +50,25 @@ def fetch_cardid_from_sn(db, sn):
 	try:
 		dbid = cur.fetchone()[0]		# If value in DB is "NULL", this returns None.
 	except Exception as ex:
-		print ex
+#		print ex
 		return 0
 	else:
 		if dbid:
 			return dbid
 		return 0
 
+def fetch_uniqueID_from_card_id(db, card_id): #Phase out the sn
+	con = connect(False, db)
+	cur = con.cursor()
+	cur.execute("SELECT unique_id FROM Card WHERE card_id={0}".format(card_id))
+	try:
+		uid = cur.fetchone()[0] 	#If value in DB is "NULL", thsi returns None.
+	except Exception as ex:
+		return 0
+	else:
+		if uid:
+			return uid
+		return 0
 
 def fetch_uniqueID(db, sn):
 	con = connect(False, db)
@@ -145,14 +157,16 @@ def print_test(db, n, test_dict):
 	
 	## Print attachements:
 	for attachment in test_dict["attachments"]:
-		print u'<tr><td>Attachment: <a href="get_attach.py?db={0}&attach_id={1}">{2}</a><td colspan=2><i>{3}</i></tr>'.format(db, attachment["id"], attachment["name"], attachment["description"]).encode('utf-8')
+		if not test_dict["revoked"]:
+			print u'<tr><td>Attachment: <a href="get_attach.py?db={0}&attach_id={1}">{2}</a><td colspan=2><i>{3}</i></tr>'.format(db, attachment["id"], attachment["name"], attachment["description"]).encode('utf-8')
 	print '</tbody></table>'
 	### Display image if there is one:
 	for attachment in test_dict["attachments"]:
-		ext = attachment["name"].split(".")[-1].lower()
-		if ext in ["png", "jpg", "jpeg", "gif"]:
-			location = settings.get_attachment_path(db, test_dict["test_id"], attachment["id"]).replace("/var/www/html", "")
-			print "<a href='{0}'><img src='{0}' style='width:66%'></a>".format(location)
+		if not test_dict["revoked"]:
+			ext = attachment["name"].split(".")[-1].lower()
+			if ext in ["png", "jpg", "jpeg", "gif"]:
+				location = settings.get_attachment_path(db, test_dict["test_id"], attachment["id"]).replace("/var/www/html", "")
+				print "<a href='{0}'><img src='{0}' style='width:66%'></a>".format(location)
 
 
 def print_tests(db, cardid):
@@ -202,10 +216,13 @@ def print_notes(db, cardid):
 	# Print notes:
 	print '<div class="row">'
 	print '<div class="col-md-12">'
-	print "<h2 id='notes'>User notes</h2>"
-	for note in notes :
-		print "<b>{0}</b><br>".format(note[0])
-		print u"<i>{0}</i><br><br><br>".format(note[1]).encode('utf-8')
+	print "<h2 id='notes'>User notes</h2><br>"
+	if notes:
+		for note in notes :
+			print "{0}</b><br>".format(note[0])
+			print u"<i>{0}</i><br><br><br><br>".format(note[1]).encode('utf-8')
+	else:
+		print "<i>(There are no notes for this module.)</i>"
 	print '</div><br><div><hr><br>'
 
 

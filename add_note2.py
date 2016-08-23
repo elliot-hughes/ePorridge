@@ -11,7 +11,7 @@ from connect import connect
 # :IMPORTS
 
 # FUNCTIONS:
-def add_note(db, sn, note):
+def add_note(db, card_id, note):
 	# Connect to DB:
 	con = connect(True, db)
 	cur = con.cursor(buffered=True)
@@ -19,8 +19,8 @@ def add_note(db, sn, note):
 	# Insert:
 	try:
 		# The following method escapes characters correctly:
-		cmd = "INSERT INTO Card_Notes (sn, note, date_time) VALUES (%s, %s, %s)"
-		values = (sn, note, time.strftime("%d/%m/%Y %I:%M:%S"))
+		cmd = "INSERT INTO Card_Notes (card_id, note, date_time) VALUES (%s, %s, %s)"
+		values = (card_id, note, time.strftime("%d/%m/%Y %I:%M:%S"))
 		cur.execute(cmd, values)
 		con.commit()
 		con.close()
@@ -36,7 +36,7 @@ def add_note(db, sn, note):
 def main():
 	# Arguments:
 	form = cgi.FieldStorage()
-	sn = cgi.escape(form.getvalue('serial_num'))		# This is coming from a form.
+	card_id = cgi.escape(form.getvalue('serial_num'))		# This is coming from a form.
 	cardid = cgi.escape(form.getvalue('card_id'))
 	db = settings.get_db()
 	
